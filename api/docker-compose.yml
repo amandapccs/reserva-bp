@@ -1,0 +1,26 @@
+version: '3.7'
+services:
+  postgres:
+    container_name: api_postgres
+    image: postgres:15.2
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-q", "-d", "postgres", "-U", "postgres" ]
+      timeout: 45s
+      interval: 10s
+      retries: 10
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: api_db_docker
+      PGDATA: /data/postgres
+    env_file: .env
+    volumes:
+      - ./src/shared/db:/docker-entrypoint-initdb.d/
+      - pg-data:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    restart: unless-stopped
+
+volumes:
+  pg-data:
+
