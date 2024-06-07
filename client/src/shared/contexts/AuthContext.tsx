@@ -2,8 +2,6 @@ import React, { createContext } from "react";
 import { IHandleLoginProps, useAuth } from "../hooks";
 
 interface IAuthContextProps {
-  authenticated: boolean;
-  loading: boolean;
   handleLogin: (
     props: IHandleLoginProps
   ) => Promise<void | { errorMessage: string }>;
@@ -17,12 +15,10 @@ interface IAuthProviderProps {
 }
 
 export const AuthProvider: React.FC<IAuthProviderProps> = ({ children }) => {
-  const { authenticated, loading, handleLogin, handleLogout } = useAuth();
+  const { handleLogin, handleLogout } = useAuth();
 
   return (
-    <AuthContext.Provider
-      value={{ loading, authenticated, handleLogin, handleLogout }}
-    >
+    <AuthContext.Provider value={{ handleLogin, handleLogout }}>
       {children}
     </AuthContext.Provider>
   );
