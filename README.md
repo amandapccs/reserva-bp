@@ -114,11 +114,28 @@ Tanto front quando backend estão dockerizados e serão iniciados simultaneament
    ```sh
    git clone git@github.com:amandapccs/reserva-bp.git
    ```
-2. Acesse o diretório e insira o comando a seguir para subir a aplicação (front e back):
+2. Crie arquivos `.env` na raiz dos diretórios `api` e `client`:
+<details>
+<summary>Arquivo .env da API:</summary>
+POSTGRES_DATABASE=api_db_docker
+POSTGRES_HOST=localhost
+POSTGRES_PASSWORD=postgres
+POSTGRES_USER=postgres
+SECRET=mysecret
+EXPIRES=1800
+</details>
+<details>
+<summary>Arquivo .env do client:</summary>
+
+REACT_APP_API_URL='http://localhost:3000'
+
+</details>
+     
+4. Acesse o diretório e insira o comando a seguir para subir a aplicação (front e back):
    ```sh
    docker compose up
    ```
-3. Abra uma aba do seu navegador e digite `http://localhost:3001/`, caso a aplicação não tenha o feito automaticamente.
+5. Abra uma aba do seu navegador e digite `http://localhost:3001/`, caso a aplicação não tenha o feito automaticamente.
 
 ### Documentação da API
 Caso deseje, acesse `http://localhost:3000/api` para ter acesso a documentação da API feita usando Swagger.
