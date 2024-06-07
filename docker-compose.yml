@@ -25,7 +25,7 @@ services:
 
   api:
     container_name: bp_api
-    restart: unless-stopped
+    restart: always
     image: bp_api:1.0.0
     build:
       context: api
