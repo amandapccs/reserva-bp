@@ -117,15 +117,7 @@ Tanto front quando backend estão dockerizados e serão iniciados simultaneament
    ```sh
    docker compose up
    ```
-3. Entre no container do back-end para rodar a migração:
-   ```sh
-   docker exec -it bp_api /bin/bash
-   ```
-4. Rode o comando para gerar as migrações do banco de dados:
-   ```sh
-   npx typeorm-ts-node-commonjs migration:run -d ./src/shared/db/typeorm.config.ts
-   ```
-5. Abra uma aba do seu navegador e digite `http://localhost:3001/`, caso a aplicação não tenha o feito automaticamente.
+3. Abra uma aba do seu navegador e digite `http://localhost:3001/`, caso a aplicação não tenha o feito automaticamente.
 
 ### Documentação da API
 Caso deseje, acesse `http://localhost:3000/api` para ter acesso a documentação da API feita usando Swagger.
