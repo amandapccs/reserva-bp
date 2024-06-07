@@ -31,7 +31,6 @@ export const getDataSource = (
     username: configService.get<string>('POSTGRES_USER'),
     password: configService.get<string>('POSTGRES_PASSWORD'),
     database,
-    //namingStrategy: new CustomNamingStrategy(),
     port: 5432,
     synchronize: false,
     logging: verboseLog,

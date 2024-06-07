@@ -12,9 +12,11 @@ export class CreateMeetingDto {
   @IsArray()
   participants: ParticipantsDto[];
 
+  @ApiProperty()
   @IsDate()
   startTime: Date;
 
+  @ApiProperty()
   @IsDate()
   endTime: Date;
 }
