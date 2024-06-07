@@ -92,6 +92,7 @@ O app possui quatro rotas:
 * Postgres
 * TypeORM
 * Swagger
+* bycript
 * Jest
 * React
 * Context API
