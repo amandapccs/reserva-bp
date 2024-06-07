@@ -3,5 +3,9 @@
   "version": "1.0.0",
   "main": "index.js",
   "author": "Amanda Soares",
-  "license": "ISC"
+  "license": "ISC",
+  "scripts": {
+    "compose:up": "docker-compose up -d --build"
+  }
 }
+

@@ -1,0 +1,57 @@
+version: '3.8'
+
+services:
+  postgres:
+    container_name: postgres
+    image: postgres:11.5
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_HOST=postgres
+      - POSTGRES_APP_PASSWORD=postgres
+      - POSTGRESS_APP_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=api_db_docker
+    ports:
+      - 5432:5432
+    networks:
+      - shared-network
+    volumes:
+      - ./postgres-db:/var/lib/postgresql/data
+
+  api:
+    container_name: bp_api
+    restart: unless-stopped
+    image: bp_api:1.0.0
+    build:
+      context: api
+      dockerfile: Dockerfile
+    ports:
+      - 3000:3000
+    networks:
+      - shared-network
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  client:
+    container_name: bp_client
+    restart: unless-stopped
+    image: bp_client:1.0.0
+    build:
+      context: client
+      target: production
+      dockerfile: Dockerfile
+    ports:
+      - 3001:3001
+    networks:
+      - shared-network
+    depends_on:
+      - api
+
+networks:
+  shared-network:
