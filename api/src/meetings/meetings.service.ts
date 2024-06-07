@@ -33,13 +33,19 @@ export class MeetingService {
         return this.meetingRepository.findOne({
           where: { id: meeting.id },
           relations: ['participants'],
-          select: ['id', 'startTime', 'endTime', 'participants'],
+          select: [
+            'id',
+            'startTime',
+            'endTime',
+            'participants',
+            'participants',
+          ],
           order: { startTime: 'ASC' },
         });
       }),
     );
 
-    const formattedBrTimezone = getAllMeetingParticipants.map((meeting) => {
+    const formatted = getAllMeetingParticipants.map((meeting) => {
       const formattedMeeting = {
         ...meeting,
         startTime: new Date(meeting.startTime).toLocaleString('pt-BR', {
@@ -48,12 +54,21 @@ export class MeetingService {
         endTime: new Date(meeting.endTime).toLocaleString('pt-BR', {
           timeZone: 'America/Sao_Paulo',
         }),
+        participants: meeting.participants.map((participant) => {
+          return {
+            id: participant.id,
+            givenName: participant.givenName,
+            familyName: participant.familyName,
+            email: participant.email,
+            role: participant.role,
+          };
+        }),
       };
 
       return formattedMeeting;
     });
 
-    return formattedBrTimezone;
+    return formatted;
   }
 
   async checkNewMeetingValidity(createMeetingDto: CreateMeetingDto) {
