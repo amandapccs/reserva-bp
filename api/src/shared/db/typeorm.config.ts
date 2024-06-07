@@ -7,36 +7,19 @@ config();
 export const getDataSource = (
   configService = new ConfigService(),
 ): DataSourceOptions => {
-  const appEnv = configService.get<string>('APP_ENV');
-  const isLocal = appEnv === 'local';
-  const verboseLog = configService.get<string>('LOG_LEVEL') === 'verbose';
-  const sslOptions = {
-    ssl: true,
-    extra: {
-      ssl: {
-        rejectUnauthorized: false,
-      },
-    },
-  };
-
-  const databaseFromEnv = configService.get<string>('POSTGRES_DATABASE');
-  const database =
-    configService.get('NODE_ENV') === 'test'
-      ? `${databaseFromEnv}_test`
-      : databaseFromEnv;
+  const logging = configService.get<string>('LOG_LEVEL') === 'verbose';
 
   return {
     type: 'postgres',
     host: configService.get<string>('POSTGRES_HOST'),
     username: configService.get<string>('POSTGRES_USER'),
     password: configService.get<string>('POSTGRES_PASSWORD'),
-    database,
+    database: configService.get<string>('POSTGRES_DATABASE'),
     port: 5432,
     synchronize: false,
-    logging: verboseLog,
+    logging,
     entities: [__dirname + '/../../**/*.entity.{js,ts}'],
     subscribers: [],
-    ...(isLocal ? {} : sslOptions),
     migrations: [__dirname + '/migrations/**/*.{js,ts}'],
   };
 };
