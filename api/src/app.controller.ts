@@ -11,6 +11,7 @@ import { AuthService } from './shared/auth/auth.service';
 import { CreateUserDto } from './users/dto/create-user.dto';
 import { LoginUserDto } from './users/dto/login-user.dto';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { apiResponseMessages } from './shared/constants/messages';
 
 @ApiTags('login/register')
 @Controller()
@@ -31,7 +32,10 @@ export class AppController {
     const passwordMatch = await bcrypt.compare(body.password, user.password);
 
     if (!passwordMatch) {
-      throw new HttpException('Incorrect password', HttpStatus.UNAUTHORIZED);
+      throw new HttpException(
+        apiResponseMessages.INVALID_LOGIN,
+        HttpStatus.UNAUTHORIZED,
+      );
     }
 
     const token = await this.authService.createToken(user.id);
@@ -53,7 +57,7 @@ export class AppController {
 
     if (!user) {
       throw new HttpException(
-        { message: 'Internal Server Error, try again later' },
+        apiResponseMessages.INTERNAL_SERVER_ERROR,
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }

@@ -3,6 +3,7 @@ import { CreateMeetingDto } from './dto/create-meeting.dto';
 import { Meeting } from './entities/meeting.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { apiResponseMessages } from 'src/shared/constants/messages';
 
 @Injectable()
 export class MeetingService {
@@ -62,7 +63,7 @@ export class MeetingService {
     );
 
     if (!isMeetingDurationValid) {
-      return 'Reuniões devem ter duração entre 30 e 120 minutos';
+      return apiResponseMessages.INVALID_MEETING_DURATION;
     }
 
     const brokerSchedule = await this.getBrokerDaySchedule(
@@ -81,7 +82,7 @@ export class MeetingService {
     });
 
     if (isMeetingOverlapping) {
-      return 'O Corretor já possui uma reunião agendada neste horário';
+      return apiResponseMessages.OVERLAPPING_MEETING;
     }
 
     return null;

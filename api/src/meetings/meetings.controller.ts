@@ -17,6 +17,7 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
+import { apiResponseMessages } from '../shared/constants/messages';
 
 @ApiBearerAuth()
 @ApiTags('meetings')
@@ -37,7 +38,8 @@ export class MeetingController {
   ) {
     const userToken = await this.authService.decodeToken(auth);
 
-    if (!userToken) throw new HttpException('Invalid token', 401);
+    if (!userToken)
+      throw new HttpException(apiResponseMessages.INVALID_TOKEN, 401);
 
     const meetingValidations =
       await this.meetingService.checkNewMeetingValidity(createMeetingDto);
@@ -59,7 +61,9 @@ export class MeetingController {
   async findAll(@Headers('Authorization') auth: string) {
     const userToken = await this.authService.decodeToken(auth);
 
-    if (!userToken) throw new HttpException('Invalid token', 401);
+    if (!userToken) {
+      throw new HttpException(apiResponseMessages.INVALID_TOKEN, 401);
+    }
 
     const meetings = await this.meetingService.findAllMeetingByClientId(
       userToken?.id,
@@ -77,7 +81,9 @@ export class MeetingController {
   ) {
     const userToken = await this.authService.decodeToken(auth);
 
-    if (!userToken) throw new HttpException('Invalid token', 401);
+    if (!userToken) {
+      throw new HttpException(apiResponseMessages.INVALID_TOKEN, 401);
+    }
 
     return this.meetingService.remove(id);
   }
