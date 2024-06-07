@@ -3,7 +3,7 @@ import { CreateMeetingDto } from './dto/create-meeting.dto';
 import { Meeting } from './entities/meeting.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { apiResponseMessages } from 'src/shared/constants/messages';
+import { apiResponseMessages } from '../shared/constants/messages';
 
 @Injectable()
 export class MeetingService {
