@@ -17,6 +17,10 @@ export class MeetingService {
     });
   }
 
+  async remove(id: string) {
+    return this.meetingRepository.softDelete(id);
+  }
+
   async findAllMeetingByClientId(id: string) {
     const clientMeetings = await this.meetingRepository.find({
       where: { participants: { id } },
@@ -51,24 +55,17 @@ export class MeetingService {
     return formattedBrTimezone;
   }
 
-  async findOne(id: string) {
-    return this.meetingRepository.findOne({
-      where: { id },
-      relations: ['participants'],
-    });
-  }
-
-  async remove(id: string) {
-    return this.meetingRepository.softDelete(id);
-  }
-
   async checkNewMeetingValidity(createMeetingDto: CreateMeetingDto) {
-    const verifyDuration = this.verifyValidMeetingDuration(
+    const isMeetingDurationValid = this.verifyValidMeetingDuration(
       createMeetingDto.startTime,
       createMeetingDto.endTime,
     );
 
-    const brokerSchedule = await this.getBrokerSchedule(
+    if (!isMeetingDurationValid) {
+      return 'Reuniões devem ter duração entre 30 e 120 minutos';
+    }
+
+    const brokerSchedule = await this.getBrokerDaySchedule(
       createMeetingDto.startTime.toString(),
       createMeetingDto.participants[1].id,
     );
@@ -87,10 +84,6 @@ export class MeetingService {
       return 'O Corretor já possui uma reunião agendada neste horário';
     }
 
-    if (!verifyDuration) {
-      return 'Reuniões devem ter duração entre 30 e 120 minutos';
-    }
-
     return null;
   }
 
@@ -104,7 +97,7 @@ export class MeetingService {
     const isDurationValid =
       differenceInMinutes >= 30 && differenceInMinutes <= 120;
 
-    return isDurationValid ? true : false;
+    return isDurationValid;
   }
 
   private checkIfIntervalsOverlap(
@@ -121,7 +114,7 @@ export class MeetingService {
     return startDate1 <= endDate2 && startDate2 <= endDate1;
   }
 
-  private async getBrokerSchedule(startTime: string, brokerId: string) {
+  async getBrokerDaySchedule(startTime: string, brokerId: string) {
     const dateSlice = startTime.slice(0, 10); // YYYY-MM-DD
     const queryBuilder = await this.meetingRepository
       .createQueryBuilder('meeting')

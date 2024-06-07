@@ -10,8 +10,16 @@ import {
 } from '@nestjs/common';
 import { MeetingService } from './meetings.service';
 import { CreateMeetingDto } from './dto/create-meeting.dto';
-import { AuthService } from 'src/shared/auth/auth.service';
+import { AuthService } from '../shared/auth/auth.service';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 
+@ApiBearerAuth()
+@ApiTags('meetings')
 @Controller('meetings')
 export class MeetingController {
   constructor(
@@ -20,7 +28,17 @@ export class MeetingController {
   ) {}
 
   @Post()
-  async create(@Body() createMeetingDto: CreateMeetingDto) {
+  @ApiOperation({ summary: 'Create a new meeting' })
+  @ApiResponse({ status: 201, description: 'Meeting created' })
+  @ApiResponse({ status: 401, description: 'Forbidden' })
+  async create(
+    @Headers('Authorization') auth: string,
+    @Body() createMeetingDto: CreateMeetingDto,
+  ) {
+    const userToken = await this.authService.decodeToken(auth);
+
+    if (!userToken) throw new HttpException('Invalid token', 401);
+
     const meetingValidations =
       await this.meetingService.checkNewMeetingValidity(createMeetingDto);
 
@@ -31,6 +49,12 @@ export class MeetingController {
     return created;
   }
 
+  @ApiOperation({ summary: 'Get all meetings booked by the client' })
+  @ApiResponse({
+    status: 200,
+    description: 'Returns an array of the booked meetings',
+  })
+  @ApiResponse({ status: 401, description: 'Forbidden' })
   @Get()
   async findAll(@Headers('Authorization') auth: string) {
     const userToken = await this.authService.decodeToken(auth);
@@ -43,8 +67,18 @@ export class MeetingController {
     return meetings;
   }
 
+  @ApiOperation({ summary: 'Soft deletes a meeting by its ID' })
+  @ApiResponse({ status: 200, description: 'Meeting deleted' })
+  @ApiResponse({ status: 401, description: 'Forbidden' })
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  async remove(
+    @Headers('Authorization') auth: string,
+    @Param('id') id: string,
+  ) {
+    const userToken = await this.authService.decodeToken(auth);
+
+    if (!userToken) throw new HttpException('Invalid token', 401);
+
     return this.meetingService.remove(id);
   }
 }

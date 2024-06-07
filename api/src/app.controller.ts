@@ -9,7 +9,10 @@ import { UsersService } from './users/users.service';
 import * as bcrypt from 'bcrypt';
 import { AuthService } from './shared/auth/auth.service';
 import { CreateUserDto } from './users/dto/create-user.dto';
+import { LoginUserDto } from './users/dto/login-user.dto';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('login/register')
 @Controller()
 export class AppController {
   constructor(
@@ -17,8 +20,13 @@ export class AppController {
     private readonly authService: AuthService,
   ) {}
 
+  @ApiOperation({ summary: 'User login' })
+  @ApiResponse({ status: 200, description: 'User logged in' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
   @Post('login')
-  async login(@Body() body: any): Promise<any> {
+  async login(
+    @Body() body: LoginUserDto,
+  ): Promise<HttpException | { token: string }> {
     const user = await this.userService.findByEmail(body.email);
     const passwordMatch = await bcrypt.compare(body.password, user.password);
 
@@ -30,8 +38,13 @@ export class AppController {
     return { token };
   }
 
+  @ApiOperation({ summary: 'User registration' })
+  @ApiResponse({ status: 201, description: 'User created' })
+  @ApiResponse({ status: 500, description: 'Internal Server Error' })
   @Post('register')
-  async register(@Body() createUserDto: CreateUserDto): Promise<any> {
+  async register(
+    @Body() createUserDto: CreateUserDto,
+  ): Promise<HttpException | { message: string; token: string }> {
     const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
     const user = await this.userService.create({
       ...createUserDto,
