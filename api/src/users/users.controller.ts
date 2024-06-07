@@ -7,6 +7,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { AuthService } from '../shared/auth/auth.service';
+import { apiResponseMessages } from 'src/shared/constants/messages';
 
 @ApiBearerAuth()
 @ApiTags('users')
@@ -24,7 +25,10 @@ export class UsersController {
   async findAllBrokers(@Headers('Authorization') auth: string) {
     const userToken = await this.authService.decodeToken(auth);
 
-    if (!userToken) throw new HttpException('Invalid token', 401);
+    if (!userToken) {
+      throw new HttpException(apiResponseMessages.INVALID_TOKEN, 401);
+    }
+
     return this.usersService.findAllBrokers();
   }
 }

@@ -2,6 +2,7 @@ import { Roles } from '../../shared/constants/roles';
 import {
   Column,
   CreateDateColumn,
+  DeepPartial,
   DeleteDateColumn,
   Entity,
   PrimaryGeneratedColumn,
@@ -39,4 +40,8 @@ export class User {
 
   @DeleteDateColumn({ type: 'timestamptz' })
   deletedAt?: Date;
+
+  constructor(params?: DeepPartial<User>) {
+    Object.assign(this, params);
+  }
 }

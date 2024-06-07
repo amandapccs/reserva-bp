@@ -41,10 +41,14 @@ export class MeetingController {
     if (!userToken)
       throw new HttpException(apiResponseMessages.INVALID_TOKEN, 401);
 
-    const meetingValidations =
+    if (userToken.role !== 'client') {
+      throw new HttpException(apiResponseMessages.UNAUTHORIZED_USER, 401);
+    }
+
+    const validations =
       await this.meetingService.checkNewMeetingValidity(createMeetingDto);
 
-    if (meetingValidations) throw new HttpException(meetingValidations, 400);
+    if (validations) throw new HttpException(validations, 400);
 
     const created = await this.meetingService.create(createMeetingDto);
 

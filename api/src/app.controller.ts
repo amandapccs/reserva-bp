@@ -38,7 +38,7 @@ export class AppController {
       );
     }
 
-    const token = await this.authService.createToken(user.id);
+    const token = await this.authService.createToken(user);
     return { token };
   }
 
@@ -62,7 +62,7 @@ export class AppController {
       );
     }
 
-    const token = await this.authService.createToken(user.id);
+    const token = await this.authService.createToken(user);
     return { message: 'User created', token };
   }
 }
