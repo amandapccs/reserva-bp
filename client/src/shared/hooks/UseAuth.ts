@@ -26,10 +26,12 @@ export const useAuth = () => {
   const handleLogin = async ({
     email,
     password,
-  }: IHandleLoginProps): Promise<string | void> => {
+  }: IHandleLoginProps): Promise<void | { errorMessage: string }> => {
+    if (!email || !password) return { errorMessage: LOGIN_ERROR_MESSAGE };
+
     const { data } = await api.post("login", { email, password });
 
-    if (!data?.token) return LOGIN_ERROR_MESSAGE;
+    if (!data?.token) return { errorMessage: LOGIN_ERROR_MESSAGE };
 
     localStorage.setItem("token", JSON.stringify(data?.token));
     api.defaults.headers.Authorization = `Bearer ${data?.token}`;

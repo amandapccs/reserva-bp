@@ -65,7 +65,7 @@ export const SignUp = () => {
     if (register === INTERNAL_ERROR_MESSAGE) return setMessage(register);
 
     setMessage("Cadastro criado. Redirecionando para a página de login...");
-    setTimeout(() => navigate("/login"), 2000);
+    setTimeout(() => navigate("/"), 2000);
   };
 
   return (
@@ -201,7 +201,7 @@ export const SignUp = () => {
             )}
             <Grid container justifyContent="flex-end">
               <Grid item>
-                <Link href="/login" variant="body2">
+                <Link href="/" variant="body2">
                   Já possui uma conta? Entre aqui
                 </Link>
               </Grid>

@@ -4,7 +4,9 @@ import { IHandleLoginProps, useAuth } from "../hooks";
 interface IAuthContextProps {
   authenticated: boolean;
   loading: boolean;
-  handleLogin: (props: IHandleLoginProps) => Promise<void | string>;
+  handleLogin: (
+    props: IHandleLoginProps
+  ) => Promise<void | { errorMessage: string }>;
   handleLogout: () => void;
 }
 

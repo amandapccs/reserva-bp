@@ -12,7 +12,6 @@ import { ThemeProvider } from "@mui/material/styles";
 import { LightTheme } from "../../shared/themes";
 import { AuthContext } from "../../shared/contexts";
 import { useNavigate } from "react-router-dom";
-import { LOGIN_ERROR_MESSAGE } from "../../shared/utils";
 
 export const SignIn = () => {
   const [errorMessage, setErrorMessage] = useState<string>("");
@@ -28,9 +27,9 @@ export const SignIn = () => {
       password: data.get("password")?.toString(),
     });
 
-    if (signIn === LOGIN_ERROR_MESSAGE) return setErrorMessage(signIn || "");
+    if (signIn?.errorMessage) return setErrorMessage(signIn.errorMessage || "");
 
-    navigate("/");
+    navigate("/dashboard");
   };
 
   return (
@@ -98,4 +97,4 @@ export const SignIn = () => {
       </Container>
     </ThemeProvider>
   );
-}
+};

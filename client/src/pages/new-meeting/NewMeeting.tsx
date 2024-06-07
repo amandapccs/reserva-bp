@@ -75,10 +75,11 @@ export const NewMeeting = () => {
             alignItems: "center",
           }}
         >
-          <Typography component="h1" variant="h6">
-            Selecione data e horário para a reunião
+          <Typography component="h1" variant="h5">
+            Nova reunião
           </Typography>
           <DatePicker
+            slotProps={{ textField: { placeholder: "Data da reunião" } }}
             value={date}
             onChange={setDate}
             sx={{ minWidth: "90%", mt: 2, backgroundColor: "white" }}
@@ -92,11 +93,13 @@ export const NewMeeting = () => {
             }}
           >
             <TimePicker
+              slotProps={{ textField: { placeholder: "Início" } }}
               value={startTime}
               onChange={(newValue) => setStartTime(newValue)}
               sx={{ mr: 2, backgroundColor: "white" }}
             />
             <TimePicker
+              slotProps={{ textField: { placeholder: "Término" } }}
               value={endTime}
               onChange={setEndTime}
               sx={{ backgroundColor: "white" }}

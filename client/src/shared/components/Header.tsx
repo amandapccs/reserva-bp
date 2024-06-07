@@ -17,7 +17,7 @@ export const Header = () => {
           <Typography variant="h6" component={Link} to="/dashboard" sx={{ flexGrow: 1, textDecoration: "none", color: "white" }}>
             Reserva PB
           </Typography>
-          <Button color="inherit" component={Link} to="/login" onClick={handleLogout}>
+          <Button color="inherit" component={Link} to="/" onClick={handleLogout}>
             Sair
           </Button>
         </Toolbar>
