@@ -137,6 +137,10 @@ Caso deseje, acesse `http://localhost:3000/api` para ter acesso a documentação
 
 </details>
 
+### Testes
+Foram realizados testes unitários nos serviços da API utilizando Jest, com alta porcentagem de cobertura em todos os serviços:
+<br />
+[![Tests][tests]](tests)
 
 <!-- USAGE EXAMPLES -->
 ## Como usar
@@ -169,3 +173,4 @@ Amanda Soares - amandchen@hotmail.com - <a href="https://www.linkedin.com/in/ama
 [new-meeting]: https://i.imgur.com/hqUpuwy.png
 [new-meeting-2]: https://i.imgur.com/e9e43iO.png
 [swagger]: https://i.imgur.com/qvcR8H8.png
+[tests]: https://i.imgur.com/zQVpsA2.png
