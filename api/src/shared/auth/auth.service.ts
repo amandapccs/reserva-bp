@@ -21,4 +21,13 @@ export class AuthService {
       return false;
     }
   }
+
+  async validateToken(token: string): Promise<boolean> {
+    try {
+      this.jwtService.verify(token.replace('Bearer ', ''));
+      return true;
+    } catch (err) {
+      return false;
+    }
+  }
 }

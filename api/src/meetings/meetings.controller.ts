@@ -7,6 +7,7 @@ import {
   Delete,
   HttpException,
   Headers,
+  UseGuards,
 } from '@nestjs/common';
 import { MeetingService } from './meetings.service';
 import { CreateMeetingDto } from './dto/create-meeting.dto';
@@ -18,6 +19,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { apiResponseMessages } from '../shared/constants/messages';
+import { AuthGuard } from 'src/shared/auth/auth.guard';
 
 @ApiBearerAuth()
 @ApiTags('meetings')
@@ -28,20 +30,18 @@ export class MeetingController {
     private readonly authService: AuthService,
   ) {}
 
-  @Post()
   @ApiOperation({ summary: 'Create a new meeting' })
   @ApiResponse({ status: 201, description: 'Meeting created' })
   @ApiResponse({ status: 401, description: 'Forbidden' })
+  @UseGuards(AuthGuard)
+  @Post()
   async create(
     @Headers('Authorization') auth: string,
     @Body() createMeetingDto: CreateMeetingDto,
   ) {
     const userToken = await this.authService.decodeToken(auth);
 
-    if (!userToken)
-      throw new HttpException(apiResponseMessages.INVALID_TOKEN, 401);
-
-    if (userToken.role !== 'client') {
+    if (userToken && userToken.role !== 'client') {
       throw new HttpException(apiResponseMessages.UNAUTHORIZED_USER, 401);
     }
 
@@ -61,6 +61,7 @@ export class MeetingController {
     description: 'Returns an array of the booked meetings',
   })
   @ApiResponse({ status: 401, description: 'Forbidden' })
+  @UseGuards(AuthGuard)
   @Get()
   async findAll(@Headers('Authorization') auth: string) {
     const userToken = await this.authService.decodeToken(auth);
@@ -70,7 +71,7 @@ export class MeetingController {
     }
 
     const meetings = await this.meetingService.findAllMeetingByClientId(
-      userToken?.id,
+      userToken.id,
     );
     return meetings;
   }
@@ -78,17 +79,9 @@ export class MeetingController {
   @ApiOperation({ summary: 'Soft deletes a meeting by its ID' })
   @ApiResponse({ status: 200, description: 'Meeting deleted' })
   @ApiResponse({ status: 401, description: 'Forbidden' })
+  @UseGuards(AuthGuard)
   @Delete(':id')
-  async remove(
-    @Headers('Authorization') auth: string,
-    @Param('id') id: string,
-  ) {
-    const userToken = await this.authService.decodeToken(auth);
-
-    if (!userToken) {
-      throw new HttpException(apiResponseMessages.INVALID_TOKEN, 401);
-    }
-
+  async remove(@Param('id') id: string) {
     return this.meetingService.remove(id);
   }
 }

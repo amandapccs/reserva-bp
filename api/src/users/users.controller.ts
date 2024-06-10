@@ -1,4 +1,4 @@
-import { Controller, Get, Headers, HttpException } from '@nestjs/common';
+import { Controller, Get, UseGuards } from '@nestjs/common';
 import { UsersService } from './users.service';
 import {
   ApiBearerAuth,
@@ -7,7 +7,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { AuthService } from '../shared/auth/auth.service';
-import { apiResponseMessages } from 'src/shared/constants/messages';
+import { AuthGuard } from 'src/shared/auth/auth.guard';
 
 @ApiBearerAuth()
 @ApiTags('users')
@@ -21,14 +21,9 @@ export class UsersController {
   @ApiOperation({ summary: 'Get all brokers' })
   @ApiResponse({ status: 200, description: 'Returns an array of all brokers' })
   @ApiResponse({ status: 401, description: 'Forbidden' })
+  @UseGuards(AuthGuard)
   @Get('brokers')
-  async findAllBrokers(@Headers('Authorization') auth: string) {
-    const userToken = await this.authService.decodeToken(auth);
-
-    if (!userToken) {
-      throw new HttpException(apiResponseMessages.INVALID_TOKEN, 401);
-    }
-
+  async findAllBrokers() {
     return this.usersService.findAllBrokers();
   }
 }
